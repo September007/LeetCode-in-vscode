@@ -1,5 +1,14 @@
 # LeetCode-in-VSCode
 
+
+## Config
+
+```bash
+git pull git@github.com:September007/LeetCode-in-vscode.git
+cd LeetCode-in-vscode
+git submodule update -init --recursive
+```
+## Debug
 提供两种本地调试的方法
 我以第一题举个例子
 如下是 LeetCode vscode插件生成的带标注的源文件
