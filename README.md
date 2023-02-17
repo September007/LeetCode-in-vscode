@@ -134,3 +134,19 @@ int main(int argc,char**argv){
 
 ## utils 库的使用
 
+
+## tips
+
+### cmake commands
+*in vscode*: 
+after install the [cmake-tools plugins](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools) then you have multi commands to use
+invoke the commands selector by { ctrl+shift+p then type 'cmake' }|{ctrl+p then type '>cmake' } 
+* Delete Cache and Reconfigure
+* Set Build Target
+* Set Debug Target
+
+you can trigger Cmake to configure by save (by ctrl+s when focus on CMakeLists.txt), if you can not, you can try this method show above
+
+### debugging 
+
+1. choosing debugging target: as [cmake-commands](#cmake-commands) say
