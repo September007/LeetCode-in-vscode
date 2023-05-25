@@ -6,7 +6,28 @@
 ```bash
 git pull git@github.com:September007/LeetCode-in-vscode.git
 cd LeetCode-in-vscode
-git submodule update -init --recursive
+git submodule update --init --recursive
+
+```
+然后硬编码你的 leetcode.workspaceFolder 到custom.cmake
+示例：
+**`vscode settings.json`**
+```json
+// 
+{
+    //...
+    "leetcode.defaultLanguage": "cpp",
+    "leetcode.hideSolved": true,
+    "leetcode.endpoint": "leetcode-cn",
+    "leetcode.workspaceFolder": "D:/CODE/LeetCode-in-vscode",
+    "clang-format.style": "Chromium"
+}
+``` 
+对应 **`${CMAKE_CURRENT_LIST_DIR}/custom.cmake`**
+```cmake
+
+set(LEETCODE_PROBLEM_SOURCES "D:/CODE/LeetCode-in-vscode"  CACHE STRING "")
+message(STATUS "hardcode LEETCODE_PROBLEM_SOURCES:${LEETCODE_PROBLEM_SOURCES}")
 ```
 ## Debug
 提供两种本地调试的方法
@@ -146,7 +167,3 @@ invoke the commands selector by { ctrl+shift+p then type 'cmake' }|{ctrl+p then 
 * Set Debug Target
 
 you can trigger Cmake to configure by save (by ctrl+s when focus on CMakeLists.txt), if you can not, you can try this method show above
-
-### debugging 
-
-1. choosing debugging target: as [cmake-commands](#cmake-commands) say

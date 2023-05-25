@@ -1,18 +1,26 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
+
+project(LeetCode)
+
+# HardCode LEETCODE_PROBLEM_SOURCES
+if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/custom.cmake)
+    include(${CMAKE_CURRENT_LIST_DIR}/custom.cmake)
+endif()
 
 option(ENABLE_REFER "生成 embeded/* 中的引用型的调试目标，其将包含提交文件" ON)
 option(ENABLE_SAVE_TESTS "auto save tests file when corresponded problem source file is deleted,\
 this will also enable auto loading tests instead of generate new when a old problem source file \
 is showing again" ON)
+option(LEETCODE_PROBLEM_SOURCES "LeetCode 插件指定的源文件的位置, vscode-setting: leetcode.workspaceFolder" "${CMAKE_CURRENT_LIST_DIR}")
 set(TESTS_SAVE_DIR "${CMAKE_CURRENT_LIST_DIR}/history-tests")
 set(REFER_TARGET_SUFFIX "-")
 set(RTS ${REFER_TARGET_SUFFIX}) # short alias
 
-project(LeetCode)
-
+# set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 include_directories(include)
 
-aux_source_directory(. srcs)
+message(STATUS "LEETCODE_PROBLEM_SOURCES:${LEETCODE_PROBLEM_SOURCES}")
+aux_source_directory("${LEETCODE_PROBLEM_SOURCES}" srcs)
 
 add_compile_definitions(LOCAL)
 
@@ -60,7 +68,11 @@ foreach(src ${srcs})
 
     # https://cmake.org/cmake/help/latest/command/string.html#regex-replace
     # split ${src} to 3 part  ---./  4  .balahbalah.cpp--- and only reserve the serial numeber
-    string(REGEX REPLACE "(\.\/)([0-9]+)(.*)" "\\2" name ${src})
+    get_filename_component(fileName "${src}" NAME)
+
+    # message("src: ${src}")
+    # message("name: ${fileName}")
+    string(REGEX REPLACE "([0-9]+)(.*)" "\\1" name "${fileName}")
     cxx_exe(${name} ${src})
 endforeach()
 
@@ -78,12 +90,16 @@ foreach(TEST ${TESTS})
     if(NOT "${serial}") # embeded/template.cpp
         continue()
     endif()
-    
+
     # "" is parameter to fit the request of at least one input paramter of string-regex-match
-    string(REGEX MATCH "\.\/${serial}\..*" thisMatch ${srcs} "") 
-    message("TEST:${TEST}|serial:${serial} thisMatch:${thisMatch}")
+    string(REGEX MATCH ".*\/${serial}\..*" thisMatch ${srcs} "")
+    message("TEST:${TEST}|serial:${serial}")
 
     if("${thisMatch}" STREQUAL "")
+        if(NOT IS_DIRECTORY "${TESTS_SAVE_DIR}")
+            file(MAKE_DIRECTORY "${TESTS_SAVE_DIR}")
+        endif()
+
         file(RENAME ${TEST} ${TESTS_SAVE_DIR}/${serial}.cpp)
         message("file(RENAME ${TEST} ${TESTS_SAVE_DIR}/${serial}.cpp)")
     endif()
