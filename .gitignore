@@ -4,3 +4,8 @@
 /*.cpp
 /embeded/
 /custom.cmake
+.cache
+.vs
+history-tests
+/*build*/
+CMakeListst.txt.user
